@@ -7,7 +7,7 @@
     -> operaciones*/
 
 int main() {
-  int n, num, eleccion;
+  int n, eleccion;
   int ver = 1;
   printf("cuantos puntos va a ingresar: ");
   scanf("%d", &n);
@@ -33,7 +33,7 @@ int main() {
       distancia(punto, n);
     }
     if (eleccion == 5) {
-      ver = 1;
+      ver = 0;
     }
     if (eleccion <= 0 || eleccion > 5) {
       printf("La eleccion no es valida");
