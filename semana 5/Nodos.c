@@ -35,19 +35,50 @@ int main(){
     return 0;
 }
 
-void insertarenlista (tpuntero *cabeza, int e){
-    tpuntero nuevo;
+void insertarenlista(tpuntero *cabeza, int e) {
+    tpuntero nuevo, actual;
+
     nuevo = malloc(sizeof(tnodo));
     nuevo->valor = e;
-    nuevo->sig = *cabeza;
-    *cabeza = nuevo;
+    nuevo->sig = NULL;
+
+    if (*cabeza == NULL) {
+        *cabeza = nuevo;
+    } else {
+        actual = *cabeza;
+
+        while (actual->sig != NULL) {
+            actual = actual->sig;
+        }
+
+        actual->sig = nuevo;
+    }
 }
 
-void imprimirlista(tpuntero cabeza){
-    while(cabeza != NULL){
-        printf("%4d",cabeza->valor);
-        cabeza = cabeza->sig;
+void imprimirlista(tpuntero cabeza) {
+    int i, count = 0;
+    tpuntero actual = cabeza;
+
+    while (actual != NULL) {
+        count++;
+        actual = actual->sig;
     }
+
+    int *elementos = malloc(sizeof(int) * count);
+
+    actual = cabeza;
+    i = 0;
+    while (actual != NULL) {
+        elementos[i] = actual->valor;
+        actual = actual->sig;
+        i++;
+    }
+
+    for (i = count - 1; i >= 0; i--) {
+        printf("%4d", elementos[i]);
+    }
+
+    free(elementos);
 }
 
 void borrarlista(tpuntero *cabeza){
