@@ -48,30 +48,47 @@ int main(int argc,  char *argv[]) {
 			    archivo se declara:
 					FILE *fp;
 					y la lectura del archivo es:
-					fp = fopen("datos_grafo.txt", "r")
+					fp = fopen("datos_grafo.txt", "r")*/
 					
-			 b) Crear el grafo usando el n�mero de v�rtices que se encuentra 
-			   en la primera fila del archivo
-				 
-			 c) Para  cada arista del grafo almacenada en el archivo datos_grafo.txt
-					ins�rtela al grafo usando la funci�n agregar_arista que ha creado en el .h
-				
-				d) muestre el grafo resultante
-				
-				e) Agregue un nuevo v�rtice al grafo y pruebe que se haya creado correctamente
+	int i , num_vertices, v, w;
+	Grafo *grafo;
+	FILE *fil;
+	fil = fopen("archivo.txt","r");
+	fscanf(fil, "%d", &num_vertices);
+	/* b) Crear el grafo usando el n�mero de v�rtices que se encuentra 
+		en la primera fila del archivo */
+	grafo = crear_grafo(num_vertices);	 
+	/*	 c) Para  cada arista del grafo almacenada en el archivo datos_grafo.txt
+		ins�rtela al grafo usando la funci�n agregar_arista que ha creado en el .h */
+	while(fscanf(fil,"%i %i", &v, &w) == 2){
+		agregar_arista(grafo,v,w);
+	}			
+		/*		d) muestre el grafo resultante */
+	mostrar_grafo(grafo);
+			/*	e) Agregue un nuevo v�rtice al grafo y pruebe que se haya creado correctamente
 		*/ 
+	// Paso e)
+		agregar_vertice(grafo); //n cambia y debiera agregar una lista en g->lisv[n-1]
+		printf("\nNumero de vertices cambio a: %d", grafo->n); //debiera mostrar 7
+		printf("\nNumero de aristas (nodos) del nuevo vertice %d es %d", grafo->n-1, grafo->lisv[grafo->n-1]->n); //debiera mostrar 0
+		agregar_arista(grafo, grafo->n-1, 0);
+		mostrar_grafo(grafo);
+	// continuar usted con las operaciones buscar arista, eliminar arista, etc.
+	int a,b;
+	printf("\n\nQue arista quiere buscar(ej:1 3, 1 siendo la lista, 3 el nodo):");
+	scanf("%d %d",&a,&b);
+	int res = buscar_arista(grafo, a, b);
+	if (res == 1){
+		printf("\nLa arista entre %d y %d existe",a,b);
+	}
+	else{
+		printf("\nLa arista entre %d y %d no existe",a,b);
+	}
+	printf("\n\nQue arista quiere eliminar(ej:1 3, 1 siendo la lista, 3 el nodo):");
+	scanf("%d %d",&a,&b);
+	eliminar_arista(grafo, a,b);
+	mostrar_grafo(grafo);
 
-
-		
-		// Paso e)
-		agregar_vertice(g); //n cambia y debiera agregar una lista en g->lisv[n-1]
-		printf("\nNumero de vertices cambio a: %d", g->n); //debiera mostrar 7
-		printf("\nNumero de aristas (nodos) del nuevo vertice %d es %d", g->n-1, g->lisv[g->n-1]->n); //debiera mostrar 0
-		agregar_arista(g, g->n-1, 0);
-		mostrar_grafo(g);
-		
-		// continuar usted con las operaciones buscar arista, eliminar arista, etc.
-		
 	printf("\n\n");
   return 0;
 }

@@ -24,9 +24,8 @@ void mostrar_grafo(Grafo *G);
 /* Tarea 4: Implemente esta operaci�n */
 void agregar_arista(Grafo *G, int v, int w); //agrega una arista (v,w) al grafo
 																					  // Es decir, agrega un nodo a la lista G-lisv[v]. �Qu� m�s debe considerar?
-
-
-
+int buscar_arista(Grafo *G, int v, int w);
+void eliminar_arista(Grafo *G, int v, int w);
 /* PROGRAMACI�N OPERACIONES */
 
 Grafo *crear_grafo(int n){
@@ -63,7 +62,22 @@ void mostrar_grafo(Grafo *G){
    Use esta funci�n para agregar v�rtices al grafo. Siga las indicaciones de su docente
    Pruebe sus resultados usando el .c*/
 void agregar_arista(Grafo *G, int v, int w){
+	insertar_nodo_fin(G->lisv[v],w);
+	G->m = G->m+1;
+}
 
-	
-	
+int buscar_arista(Grafo *G, int v, int w){
+	Nodo *aux;
+	aux = buscar_nodo(G->lisv[v],w);
+	if (aux == NULL){
+		return 0;
+	}
+	else{
+		return 1;
+	}
+}
+
+void eliminar_arista(Grafo *G, int v, int w){
+	eliminar_nodo(G->lisv[v],w);
+	G->m = G->m-1;
 }

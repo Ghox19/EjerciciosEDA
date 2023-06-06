@@ -60,25 +60,9 @@ void imprimirlista(tpuntero cabeza) {
     tpuntero actual = cabeza;
 
     while (actual != NULL) {
-        count++;
+        printf(*actual);
         actual = actual->sig;
     }
-
-    int *elementos = malloc(sizeof(int) * count);
-
-    actual = cabeza;
-    i = 0;
-    while (actual != NULL) {
-        elementos[i] = actual->valor;
-        actual = actual->sig;
-        i++;
-    }
-
-    for (i = count - 1; i >= 0; i--) {
-        printf("%4d", elementos[i]);
-    }
-
-    free(elementos);
 }
 
 void borrarlista(tpuntero *cabeza){

@@ -5,15 +5,51 @@
 typedef struct punto {
   int x;
   int y;
+  struct punto *sig;
 } nodo;
 
 typedef nodo *pnodo;
 
-void insertar_punto(punto *p, int n) {
-  for (int i = 0; i < n; i++) {
-    printf("escriba el %d punto ejemplo(x y): ", i + 1);
-    scanf("%d %d", &p[i].x, &p[i].y);
-  }
+void insertar_punto(pnodo *cabeza, int e,int cont){
+    pnodo nuevo, actual;
+    nuevo = malloc(sizeof(pnodo));
+    printf("escriba el %d punto ejemplo(x y): ", cont);
+    scanf("%d %d", nuevo->x, nuevo->y);
+    
+    nuevo->sig = NULL;
+
+    if (*cabeza == NULL) {
+        *cabeza = nuevo;
+    } else {
+        actual = *cabeza;
+
+        while (actual->sig != NULL) {
+            actual = actual->sig;
+        }
+
+        actual->sig = nuevo;
+    }
+}
+
+void mostrar(pnodo cabeza) {
+    int i, count = 0;
+    pnodo actual = cabeza;
+
+    while (actual != NULL) {
+        count++;
+        actual = actual->sig;
+    }
+
+    actual = cabeza;
+
+    i = count
+
+    for (i = count - 1; i >= 0; i--) {
+        printf("%4d %4d", valor.x, valor.y);
+        actual = actual->sig;
+    }
+
+    free(elementos);
 }
 
 void mostrar(punto *p, int n) {
