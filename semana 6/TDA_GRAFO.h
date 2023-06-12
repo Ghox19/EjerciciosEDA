@@ -1,213 +1,90 @@
-
-#include <stdio.h>
+/*Estructura de datos para grafo usando LISTA DE ADYACENCIA
+ GRAFO NO PONDERADO y DIRIGIDO -- > esto se explica en c�tedra
+ */ 
+#include <stdbool.h>
 #include <stdlib.h>
-
-/* ESTRUCTURA DE DATOS  del TDA lista  */
-struct nodo{
-  int info;
-  struct nodo *sig;
+#include "TDA_LISTA.h"
+struct grafo{
+	Lista **lisv; //Arreglo donde cada celda representa un vertice y de tipo Lista
+	int n; //numero de nodos del grafo
+	int m; //numero de vertices del grafo
 };
-typedef struct nodo Nodo;
+typedef struct grafo Grafo;
 
-struct lista{
-  Nodo *head;
-  int n; //Número de nodos agregados a la lista
-};
-typedef struct lista Lista;
+Grafo *crear_grafo(int n); //Necesito saber el n�mero de v�rtices a insertar inicialmente
+void agregar_vertice(Grafo *G); // agrega una celda (memoria) al arreglo din�mico del grafo creado
+void mostrar_grafo(Grafo *G); 
+void agregar_arista(Grafo *G, int v, int w); //agrega una arista (v,w) al grafo// Es decir, agrega un nodo a la lista G-lisv[v]. �Qu� m�s debe considerar?
+int buscar_arista(Grafo *G, int v, int w);
+void eliminar_arista(Grafo *G, int v, int w);
+Lista* obtener_aristas(Grafo *G);
+int obtener_grado_vertice(Grafo *G, int v);
+/* PROGRAMACI�N OPERACIONES */
 
-
-/* Encabezados de las operaciones programadas*/
-
-Lista *crear_lista();
-int is_lista_vacia(Lista *L);
-Nodo *crear_nodo(int val);
-void insertar_nodo_ini(Lista *L, int val); 
-void insertar_nodo_fin(Lista *L, int val);
-void mostrar_lista(Lista *L);
-int  eliminar_nodo_ini(Lista *L);
-int  eliminar_nodo_fin(Lista *L);
-void eliminar_nodo(Lista *L, int valE); /* eliminar dado un valor */
-Nodo *buscar_Nodo(Lista *L, int val); /* retorna la dirección del nodo encontrado */
-
-
-/* Programación de las Operaciones */
-
-Lista *crear_lista(){
-	Lista *L = (Lista*)malloc(sizeof(Lista));
-  L->head = NULL;
-  L->n = 0;
-	return L;
+Grafo *crear_grafo(int n){
+	Grafo *G;
+	G = malloc(sizeof(Grafo));
+  G->lisv = malloc(sizeof(Lista)*n);
+	for (int i=0; i<n; i++){
+      G->lisv[i] = crear_lista(); //recuerde: �qu� hace esta funci�n?
+	}
+  G->n = n;
+  G->m = 0;
+	return  G;	
 }
 
-int is_lista_vacia(Lista *L){
-	if(L->head == NULL)
-		return 1; /*es 1 cuando la lista es vacía*/
-	else
+void agregar_vertice (Grafo *G){
+	G->lisv = realloc(G->lisv, sizeof(Lista)*(G->n + 1)); //realloc reasigna tama�o memoria
+																												// conservando lo anterior
+  G->n = G->n + 1; 
+  G->lisv[G->n-1] = crear_lista(); //G->n-1 es el �ltimo �ndice del arreglo G->lisv	
+	
+}
+
+void mostrar_grafo(Grafo *G){ 
+	printf("\n Numero de vertices:%d",G->n);
+	printf("\n Numero de aristas:%d",G->m);
+	for (int i=0; i<G->n; i++){
+      printf("\n %d  ",i );
+			mostrar_lista(G->lisv[i]);
+	}
+
+}
+
+/* Despu�s de programar esta funci�n, modifique el programa  .c 
+   Use esta funci�n para agregar v�rtices al grafo. Siga las indicaciones de su docente
+   Pruebe sus resultados usando el .c*/
+void agregar_arista(Grafo *G, int v, int w){
+	insertar_nodo_fin(G->lisv[v],w);
+	G->m = G->m+1;
+}
+
+int buscar_arista(Grafo *G, int v, int w){
+	Nodo *aux;
+	aux = buscar_nodo(G->lisv[v],w);
+	if (aux == NULL){
 		return 0;
-}
-
-Nodo *crear_nodo(int val){
-	Nodo *new_nodo;
-	new_nodo = (Nodo*)malloc(sizeof(Nodo));
-	new_nodo->info = val;
-  new_nodo->sig = NULL;	
-  return new_nodo;
-}
-
-void insertar_nodo_ini(Lista *L, int val){
-	Nodo *new_nodo;
-	new_nodo = crear_nodo(val);
-	if (!(is_lista_vacia(L))){ 
-			new_nodo->sig = L->head;
 	}
-	L->head = new_nodo;
-	L->n = L->n + 1;  /* aumenta el número de nodos de la lista L */
-}
-
-void insertar_nodo_fin(Lista *L, int val){
-	Nodo *new_nodo,*aux;
-	new_nodo = crear_nodo(val);
-	if (!(is_lista_vacia(L))){ 
-		aux = L->head;
-		while(aux->sig !=NULL){
-			aux = aux->sig;
-		}
-		aux->sig = new_nodo;
-	}else{
-		L->head = new_nodo;
+	else{
+		return 1;
 	}
-	L->n = L->n + 1;  /* aumenta el número de nodos de la lista L */
 }
 
+void eliminar_arista(Grafo *G, int v, int w){
+	eliminar_nodo(G->lisv[v],w);
+	G->m = G->m-1;
+}
 
-void mostrar_lista(Lista *L){
-	Nodo *aux;
-	if (!(is_lista_vacia(L))){ 
-	    aux = L->head;
-			printf("->");
-	    while(aux != NULL){
-		    printf(" %d", aux->info);
-		    aux = aux->sig;
-	    }
+Lista* obtener_aristas(Grafo *G) {
+    Lista* arista = crear_lista();
+    for (int i = 0; i < G->m; i++) {
+        insertar_nodo_fin(arista, G->lisv[i]->n);
     }
-}
-
-int eliminar_nodo_ini(Lista *L){
-	Nodo *aux;
-	int e=0;
-	if (!is_lista_vacia(L)) {
-		aux =  L->head; 
-		L->head = L->head->sig; 
-		e = aux->info;
-		L->n = L->n  - 1; /* descuenta el número de nodos de la lista */
-		aux->sig = NULL;
-		free (aux) ; 
-	}
-	return e;
-}
-
-int  eliminar_nodo_fin(Lista *L){
-	Nodo *aux, *auxE;
-	int e=0;
-	if (!is_lista_vacia(L)){
-		/* mover el aux al penúltimo nodo */
-		aux = L->head;
-		while(aux->sig->sig !=NULL){
-				aux = aux->sig;
-		}		
-		e = aux->sig->info;
-		L->n = L->n - 1;
-		auxE = aux->sig;
-		aux->sig = NULL;
-		free (auxE) ; 
-	}
-	return e;	
-}
-
-Nodo *buscar_nodo(Lista *L, int val){
-	Nodo *aux=NULL;
-	if  (!is_lista_vacia(L)) {
-		aux = L->head;
-		while(aux != NULL){
-			if(aux->info != val)
-				aux = aux->sig;
-			else
-				return aux;
-		}
-		aux=NULL; /* no lo encontró */
-  }
-	return aux;
-}
-
-void eliminar_nodo(Lista *L, int val){
-	Nodo *auxE, *aux; 
-	int e;
-	if  (!is_lista_vacia(L)) {
-		auxE = buscar_nodo(L,val);
-		if (auxE != NULL){
-			if (auxE == L->head){  
-			   e = eliminar_nodo_ini(L);
-			}else {
-			   if (auxE->sig == NULL){ 
-						e = eliminar_nodo_fin(L);
-			   }else {
-						/* Si el nodo a eliminar no está en el inicio ni en el fin 
-						   mueve el aux al nodo anterior al que se elimina */
-						aux = L->head;
-						while(aux->sig != auxE){
-								aux = aux -> sig;
-						}
-						auxE = aux->sig ;
-						aux->sig = auxE->sig;
-						L->n = L->n - 1;
-						auxE->sig = NULL;
-						free (auxE) ; 
-				} 
-			}
-		}
-	}	
-} 
-
-/* Otras operaciones útiles */
-
-Nodo *primer_nodo(Lista *L){
-	return L->head; /* si es vacía debiera retornal NULL */
-}
-
-Nodo *ultimo_nodo(Lista *L){
-	Nodo *aux=NULL;
-	if  (!is_lista_vacia(L)) {	
-		 aux = L->head;
-		 while(aux->sig !=NULL){
-			 aux = aux->sig;
-		 }
-  }
-	return aux;
-}
-
-Nodo *penultimo_nodo(Lista *L){
-	Nodo *aux=NULL;
-	if  (!is_lista_vacia(L)) {	/* ¿qué pasa cuando L tiene un solo nodo */
-		 aux = L->head;
-		 while(aux->sig->sig !=NULL){
-			 aux = aux->sig;
-		 }
-	}
-	return aux;
-
+	mostrar_lista(arista);
+    return arista;
 }
 
 
-Nodo *nodo_anterior(Lista *L, int val){ 
-	Nodo *aux=NULL;
-	if  (!is_lista_vacia(L)) {	/* ¿qué pasa cuando L tiene un solo nodo */
-		aux = L->head;
-		while(aux -> sig !=NULL){
-			if(aux->sig->info == val)
-      		return aux;
-			else
-					aux = aux -> sig;
-			}
-  }
-	return aux; /* ¿qué pasa si no encuentra el valor */
+int obtener_grado_vertice(Grafo *G, int v){
+	return G->lisv[v]->n;
 }

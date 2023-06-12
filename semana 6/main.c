@@ -3,7 +3,7 @@
 #include <stdlib.h>
 
 // Agregue el TDA correspondiente
-#include "TDA.h"
+#include "TDA_GRAFO.h"
 
 
 int main(int argc,  char *argv[]) {
@@ -88,7 +88,8 @@ int main(int argc,  char *argv[]) {
 	scanf("%d %d",&a,&b);
 	eliminar_arista(grafo, a,b);
 	mostrar_grafo(grafo);
-
+	Lista* Lista_aristas = obtener_aristas(grafo);
+	mostrar_lista(Lista_aristas);
 	printf("\n\n");
-  return 0;
+  	return 0;
 }
