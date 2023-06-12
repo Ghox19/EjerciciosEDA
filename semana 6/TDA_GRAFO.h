@@ -77,7 +77,7 @@ void eliminar_arista(Grafo *G, int v, int w){
 
 Lista* obtener_aristas(Grafo *G) {
     Lista* arista = crear_lista();
-    for (int i = 0; i < G->m; i++) {
+    for (int i = 0; i < G->n; i++) {
         insertar_nodo_fin(arista, G->lisv[i]->n);
     }
 	mostrar_lista(arista);
