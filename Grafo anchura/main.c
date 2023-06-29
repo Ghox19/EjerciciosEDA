@@ -75,7 +75,9 @@ int main(int argc,  char *argv[]) {
 		mostrar_grafo(grafo);
 	// continuar usted con las operaciones buscar arista, eliminar arista, etc.
 	printf("\n");
-	Verificar_conexo_anchura(grafo);
-	printf("\n");
+	eliminar_arista(g,6,0);
+	mostrar_grafo(grafo);
+	bool res = Verificar_conexo_anchura(g,0);
+	printf("%d",res);
   	return 0;
 }

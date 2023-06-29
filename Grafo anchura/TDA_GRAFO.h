@@ -20,7 +20,7 @@ void eliminar_arista(Grafo *G, int v, int w);
 Lista* obtener_aristas(Grafo *G);
 Lista* obtener_adyacentes(Grafo *G, int v) ;
 int obtener_grado_vertice(Grafo *G, int v);
-bool Verificar_conexo_anchura(Grafo *G);
+bool Verificar_conexo_anchura(Grafo *G, int origen);
 /* PROGRAMACI�N OPERACIONES */
 
 Grafo *crear_grafo(int n){
@@ -90,7 +90,7 @@ Lista* obtener_aristas(Grafo *G) {
 Lista* obtener_adyacentes(Grafo *G, int v) {
     Lista* arista = crear_lista();
     Nodo* aux = G->lisv[v]->head;
-	while (aux =! NULL){
+	while (aux != NULL){
 		insertar_nodo_fin(arista, aux->info);
 		aux = aux->sig;
 	}
@@ -101,23 +101,34 @@ int obtener_grado_vertice(Grafo *G, int v){
 	return G->lisv[v]->n;
 }
 
-bool Verificar_conexo_anchura(Grafo *G) {
-    int *diferencias = NULL;
-    diferencias = (int *)calloc(G->n, sizeof(int));
-	int ver = 0, i = 0;
-	while (ver == 0){
-		Lista* adya = obtener_adyacentes(G, i);
-		Nodo* aux = adya->head;
-		while(aux =! NULL){
-			int nodo = aux->info;
-			if (diferencias[nodo] =! nodo){
-				diferencias[nodo] = nodo;
+bool Verificar_conexo_anchura(Grafo *G, int origen) {
+    bool visitados[G->n]; //defino una lista falsa de todos los vertices del grafo
+	for (int i = 0; i < G->n; i++){
+		visitados[i] = false;
+	}
+	visitados[origen] = true; //defino el origen true
+	
+	int cola[G->n]; //defino una cola 
+	int frente = 0;
+	int fin = 0;
+	cola[fin++] = origen;
+
+	while (frente != fin){
+		int vertice = cola[frente++];
+		Lista *adya = obtener_adyacentes(G, vertice);
+		Nodo *aux = adya->head;
+		while(aux != NULL){
+			if (visitados[aux->info] == false){
+				visitados[aux->info] = true;
+				cola[fin++] = aux->info;
 			}
 			aux = aux->sig;
 		}
-		
 	}
-
-    free(diferencias);
-    return true;
+	for (int i = 0; i < G->n; i++){
+		if (visitados[i] == false){
+			return false;
+		}
+	}
+	return true;
 }
