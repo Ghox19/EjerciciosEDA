@@ -75,7 +75,10 @@ int main(int argc,  char *argv[]) {
 		mostrar_grafo(grafo);
 	// continuar usted con las operaciones buscar arista, eliminar arista, etc.
 	printf("\n");
-	Verificar_conexo_anchura(grafo);
-	printf("\n");
+	//eliminar_arista(grafo,6,0);
+	mostrar_grafo(grafo);
+	bool res = Verificar_conexo_anchura(grafo,0);
+	bool res2 = Conexo_DFS(grafo);
+	printf("\n\n%d %d", res, res2);
   	return 0;
 }

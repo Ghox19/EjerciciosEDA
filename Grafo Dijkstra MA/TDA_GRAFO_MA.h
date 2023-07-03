@@ -1,19 +1,31 @@
-//Estructura de datos para grafo con MATRIZ DE ADYACENCIA
-// Grafo PONDERADO.
+/*Estructura de datos para grafo usando LISTA DE ADYACENCIA
+ GRAFO NO PONDERADO y DIRIGIDO -- > esto se explica en cï¿½tedra
+ */ 
 #include <stdbool.h>
+#include <stdlib.h>
+
+
+#include "TDA_LISTA.h"
 struct grafo{
-	float **Mad;
-	int n;
-	int m;
+	float **Mad; //Arreglo donde cada celda representa un vertice y de tipo Lista
+	int n; //numero de nodos del grafo
+	int m; //numero de vertices del grafo
 };
 typedef struct grafo Grafo;
+
+typedef struct vertice_visitado{
+	int marcado;
+	int pred;
+	int distancia;  //distancia o tiempo alcanzado
+}Visit;
+
 struct arista{
 	int v,w;
 	float peso;
 };
 typedef struct arista Arista;
 
-//Encabezado Operaciones
+// Programaciï¿½n Operaciones
 Grafo *crear_grafo(int n);
 Arista crear_arista(int v, int w, float peso);
 bool agregar_arista(Grafo *g, Arista a);
@@ -25,9 +37,6 @@ int grado_vertice(Grafo *g, int v);
 int *adyacentes_vertice(Grafo *g, int v);
 void mostrar_adyacentes(Grafo *g, int v);
 
-
-// Programación Operaciones
-
 Arista crear_arista(int v, int w, float peso){
 	Arista a;
 	a.v = v;
@@ -38,7 +47,7 @@ Arista crear_arista(int v, int w, float peso){
 
 int grado_vertice(Grafo *g, int v){
 	int cuenta=0;
-	if (existe_vertice(g,v)){ // La existencia debiera validarse antes de entrar v aa la función
+	if (existe_vertice(g,v)){ // La existencia debiera validarse antes de entrar v aa la funciï¿½n
 		for (int j=0; j<g->n; j++) {
 			if (g->Mad[v][j] != 0.0)
 				cuenta = cuenta + 1;
@@ -49,7 +58,7 @@ int grado_vertice(Grafo *g, int v){
 
 int *adyacentes_vertice(Grafo *g, int v){
 	int *adyacentes = NULL, k=0;
-	if (grado_vertice(g,v)){ // La existencia debiera validarse antes de entrar v a la función
+	if (grado_vertice(g,v)){ // La existencia debiera validarse antes de entrar v a la funciï¿½n
 		adyacentes = (int*)malloc(sizeof(int) * grado_vertice(g,v));
 		for (int j=0; j<g->n; j++) {
 			if (g->Mad[v][j] != 0.0){
@@ -68,7 +77,7 @@ Grafo *crear_grafo(int n){
 	for (int i=0; i<n; i++){
       g->Mad[i] = malloc(sizeof(float)*n);
 	}
-	//Todas las aristas M[i][j] de la matriz quedan inactivas (sin conexión)
+	//Todas las aristas M[i][j] de la matriz quedan inactivas (sin conexiï¿½n)
 	for (int i=0; i<n;i++) {
 		for (int j=0; j<n;j++) 
 				g->Mad[i][j] = 0.0;
@@ -92,8 +101,8 @@ void mostrar_grafo(Grafo *g){
 }
 
 bool agregar_arista(Grafo *g, Arista a){
-	if (existe_vertice(g,a.v)){ // existe vértice v?
-		if (existe_vertice(g,a.w)){ // existe vértice w?
+	if (existe_vertice(g,a.v)){ // existe vï¿½rtice v?
+		if (existe_vertice(g,a.w)){ // existe vï¿½rtice w?
 				g->Mad[a.v][a.w] = a.peso;
 				g->m = g->m + 1;
 				return true;
@@ -103,8 +112,8 @@ bool agregar_arista(Grafo *g, Arista a){
 }
 
 bool eliminar_arista(Grafo *g, Arista a){
-	if (existe_vertice(g,a.v)){ // existe vértice v?
-		if (existe_vertice(g,a.w)){ // existe vértice w?
+	if (existe_vertice(g,a.v)){ // existe vï¿½rtice v?
+		if (existe_vertice(g,a.w)){ // existe vï¿½rtice w?
 			if (g->Mad[a.v][a.w] != 0.0) {
 				g->Mad[a.v][a.w] = 0.0;
 				g->m = g->m - 1;
@@ -123,8 +132,8 @@ bool existe_vertice(Grafo *g, int v){
 }
 
 bool existe_arista(Grafo *g, Arista a){
-	if (existe_vertice(g,a.v)){ // existe vértice v?
-		if (existe_vertice(g,a.w)){ // existe vértice w?
+	if (existe_vertice(g,a.v)){ // existe vï¿½rtice v?
+		if (existe_vertice(g,a.w)){ // existe vï¿½rtice w?
 			if (g->Mad[a.v][a.w] != 0.0)
 				return true;
 		}
@@ -133,19 +142,10 @@ bool existe_arista(Grafo *g, Arista a){
 }
 
 void mostrar_adyacentes(Grafo *g, int v){
-			//Se asume que antes de llamar a esta operación ha validado existencia adyacentes
+			//Se asume que antes de llamar a esta operaciï¿½n ha validado existencia adyacentes
 			for (int j=0; j<g->n; j++) {
 				if (g->Mad[v][j] != 0.0){
 						printf("\n  %d", j);
 			  }
 		  }
 }
-
-
-
-
-
-
-
-
-
